@@ -1,0 +1,65 @@
+<?xml version='1.0'?>
+<sdf version='1.6'>
+  <model name='wamv2'>
+    <pose>0 0 0.2 0 0 0</pose>
+    <static>false</static>
+    
+    <!-- Hydrodynamics Plugin -->
+    <plugin name="hydrodynamics" filename="libHydrodynamicsPlugin.so">
+      <wave_model>ocean</wave_model>
+      <damping_on>true</damping_on>
+      <viscous_drag_on>true</viscous_drag_on>
+      <pressure_drag_on>true</pressure_drag_on>
+      <markers>
+        <update_rate>30</update_rate>
+        <water_patch>false</water_patch>
+        <waterline>false</waterline>
+        <underwater_surface>false</underwater_surface>
+      </markers>
+    </plugin>
+
+    <!-- Add planar move plugin with namespaced topics -->
+    <plugin name="planar_move" filename="libgazebo_ros_planar_move.so">
+      <commandTopic>/wamv2/cmd_vel</commandTopic>
+      <odometryTopic>/wamv2/odom</odometryTopic>
+      <odometryFrame>wamv2/odom</odometryFrame>
+      <robotBaseFrame>wamv2/base_link</robotBaseFrame>
+      <odometryRate>20.0</odometryRate>
+    </plugin>
+    
+    <link name="base_link">
+      <velocity_decay>
+        <linear>0.05</linear>
+        <angular>0.05</angular>
+      </velocity_decay>
+      
+      <visual name="base_visual">
+        <geometry>
+          <mesh>
+            <uri>model://wam-v/meshes/WAM-V-Base.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      
+      <collision name="base_collision">
+        <geometry>
+          <mesh>
+            <uri>model://wam-v/meshes/wam-v-base_collision_406.stl</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      
+      <inertial>
+        <pose>0 0 0 0 0 0</pose>
+        <mass>180</mass>
+        <inertia>
+          <ixx>120</ixx>
+          <ixy>0</ixy>
+          <iyy>393</iyy>
+          <iyz>0</iyz>
+          <izz>446</izz>
+        </inertia>
+      </inertial>
+    </link>
+  </model>
+</sdf>

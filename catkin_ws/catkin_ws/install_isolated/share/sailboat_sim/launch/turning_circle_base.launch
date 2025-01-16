@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="scenario" default="three_times"/>
+    <arg name="turn_direction" default="port"/>
+    <arg name="boat_length" value="4.06"/>
+    
+    <!-- Load robot description -->
+    <param name="robot_description" textfile="$(find sailboat_sim)/models/wam-v/model.urdf"/>
+    
+<!-- Launch ocean world -->
+<include file="$(find asv_wave_sim_gazebo)/launch/ocean_world_top.launch"/>
+    
+    <!-- Transform broadcaster -->
+    <node pkg="sailboat_sim" type="transform_broadcaster.py" name="frame_broadcaster"/>
+    
+    <!-- Spawn WAM-V -->
+    <node name="spawn_wamv" pkg="gazebo_ros" type="spawn_model"
+          args="-sdf -file $(find sailboat_sim)/models/wam-v/model.sdf
+                -model wamv 
+                -x 0.0 -y 0.0 -z 0.1 
+                -Y 3.14159"
+          output="screen"/>
+          
+<!-- Speed Controller -->
+<node name="speed_controller" pkg="pid" type="controller" output="screen">
+    <param name="Kp" value="1.0"/>  
+    <param name="Ki" value="0.0001"/>
+    <param name="Kd" value="0.001"/>
+    <param name="upper_limit" value="2.0"/>
+    <param name="lower_limit" value="-2.0"/>
+    <param name="autotune_type" value="zn"/>
+    <param name="topic_from_controller" value="/speed/control_effort"/>
+    <param name="topic_from_plant" value="/speed/state"/>
+    <param name="setpoint_topic" value="/speed/setpoint"/>
+    <param name="enable_topic" value="/speed/pid_enable"/>
+</node>
+
+<!-- Heading Controller -->
+<node name="heading_controller" pkg="pid" type="controller" output="screen">
+    <param name="Kp" value="1.0"/>
+    <param name="Ki" value="0.0001"/>
+    <param name="Kd" value="0.006"/>
+    <param name="upper_limit" value="1.5"/>
+    <param name="lower_limit" value="-1.5"/>
+    <param name="autotune_type" value="zn"/>
+    <param name="topic_from_controller" value="/heading/control_effort"/>
+    <param name="topic_from_plant" value="/heading/state"/>
+    <param name="setpoint_topic" value="/heading/setpoint"/>
+    <param name="enable_topic" value="/heading/pid_enable"/>
+</node>
+
+<!-- Turn Rate Controller -->
+<node name="turn_rate_controller" pkg="pid" type="controller" output="screen">
+    <param name="Kp" value="1.0"/>
+    <param name="Ki" value="0.001"/>
+    <param name="Kd" value="0.021"/>
+    <param name="upper_limit" value="1.0"/>
+    <param name="lower_limit" value="-1.0"/>
+    <param name="autotune_type" value="zn"/>
+    <param name="topic_from_controller" value="/turn_rate/control_effort"/>
+    <param name="topic_from_plant" value="/turn_rate/state"/>
+    <param name="setpoint_topic" value="/turn_rate/setpoint"/>
+    <param name="enable_topic" value="/turn_rate/pid_enable"/>
+</node>
+
+    <node name="speed_pid_autotune" pkg="pid" type="autotune" output="screen">
+    <param name="Kp_min" value="0.1"/>
+    <param name="Kp_max" value="5.0"/>
+    <param name="Kp_step" value="0.1"/>
+    <param name="num_loops" value="100"/>
+    <param name="nameSpc" value="/speed_controller/"/>
+    </node>
+
+    <node name="heading_pid_autotune" pkg="pid" type="autotune" output="screen">
+    <param name="Kp_min" value="0.1"/>
+    <param name="Kp_max" value="5.0"/>
+    <param name="Kp_step" value="0.1"/>
+    <param name="num_loops" value="100"/>
+    <param name="nameSpc" value="/heading_controller/"/>
+    </node>
+
+    <node name="turn_rate_pid_autotune" pkg="pid" type="autotune" output="screen">
+    <param name="Kp_min" value="0.1"/>
+    <param name="Kp_max" value="5.0"/>
+    <param name="Kp_step" value="0.1"/>
+    <param name="num_loops" value="100"/>
+    <param name="nameSpc" value="/turn_rate_controller/"/>
+    </node>
+    
+    <!-- Main Controller -->
+    <node name="turning_circle_controller" pkg="sailboat_sim" type="turning_circle.py" output="screen">
+        <param name="scenario" value="$(arg scenario)"/>
+        <param name="turn_direction" value="$(arg turn_direction)"/>
+    </node>
+
+    <!-- Trajectory Plotter -->
+    <node name="trajectory_plotter" pkg="sailboat_sim" type="trajectory_plotter.py" output="screen">
+        <param name="scenario" value="$(arg scenario)"/>
+        <param name="turn_direction" value="$(arg turn_direction)"/>
+    </node>
+  
+    <node name="dynamics_plotter" pkg="sailboat_sim" type="dynamics_plotter.py" output="screen"/>
+    
+
+    <!-- Camera visualization -->
+    <node name="camera_view" pkg="image_view" type="image_view" respawn="false" output="screen">
+    <remap from="image" to="/wamv/top_camera/image_raw"/>
+    <param name="autosize" value="true"/>
+    </node>
+    <!-- RViz for comprehensive visualization -->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find sailboat_sim)/rviz/wamv_config.rviz" output="screen"/>
+</launch>

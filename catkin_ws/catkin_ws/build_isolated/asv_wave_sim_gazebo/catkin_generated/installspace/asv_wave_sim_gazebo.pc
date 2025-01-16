@@ -1,0 +1,8 @@
+prefix=/home/sharon/catkin_ws/install_isolated
+
+Name: asv_wave_sim_gazebo
+Description: Description of asv_wave_sim_gazebo
+Version: 0.1.2
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

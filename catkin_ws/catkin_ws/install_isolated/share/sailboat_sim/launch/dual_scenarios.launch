@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- Arguments for scenario selection -->
+    <arg name="scenario" default="twice"/>  <!-- Options: 'twice' or 'thrice' -->
+    
+    <!-- Launch the ocean world -->
+    <include file="$(find asv_wave_sim_gazebo)/launch/ocean_world.launch"/>
+    
+    <!-- Spawn the WAM-V -->
+    <node name="spawn_wamv" 
+          pkg="gazebo_ros" 
+          type="spawn_model"
+          args="-sdf 
+                -file $(find sailboat_sim)/models/wam-v/model.sdf
+                -model wamv
+                -x 0 -y 0 -z -0.2
+                -R 0 -P 0 -Y 0"
+          output="screen"
+          launch-prefix="bash -c 'sleep 5; $0 $@' "/>
+    
+    <!-- Launch PID controllers -->
+    <!-- Heading controller -->
+    <node name="heading_controller" 
+          pkg="pid" 
+          type="controller" 
+          output="screen" >
+        <param name="Kp" value="3.0" />
+        <param name="Ki" value="0.1" />
+        <param name="Kd" value="0.5" />
+        <param name="upper_limit" value="2.0" />
+        <param name="lower_limit" value="-2.0" />
+        <param name="windup_limit" value="2.0" />
+    </node>
+
+    <!-- Radius controller -->
+    <node name="radius_controller" 
+          pkg="pid" 
+          type="controller" 
+          output="screen" >
+        <param name="Kp" value="2.0" />
+        <param name="Ki" value="0.1" />
+        <param name="Kd" value="0.4" />
+        <param name="upper_limit" value="5.0" />
+        <param name="lower_limit" value="-5.0" />
+        <param name="windup_limit" value="5.0" />
+    </node>
+    
+    <!-- Launch the circular trajectory controller -->
+    <node name="circular_trajectory_controller" 
+          pkg="sailboat_sim" 
+          type="dual_pid_controller.py" 
+          output="screen"
+          launch-prefix="bash -c 'sleep 10; $0 $@' "
+          respawn="true">
+        <!-- Scenario selection -->
+        <param name="scenario" value="$(arg scenario)"/>
+        <param name="linear_speed" value="10.0"/>
+    </node>
+
+    <!-- Add rqt_plot for visualization -->
+    <node name="rqt_plot" 
+          pkg="rqt_plot" 
+          type="rqt_plot"
+          args="/radius_controller/control_effort /heading_controller/control_effort /cmd_vel/linear/x /cmd_vel/angular/z"
+          launch-prefix="bash -c 'sleep 15; $0 $@' "/>
+</launch>

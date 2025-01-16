@@ -1,0 +1,50 @@
+Panels:
+  - Class: rviz/Displays
+    Help Height: 78
+    Name: Displays
+    Property Tree Widget:
+      Expanded: ~
+      Splitter Ratio: 0.5
+    Tree Height: 726
+
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Alpha: 0.5
+      Cell Size: 5
+      Class: rviz/Grid
+      Color: 160; 160; 164
+      Enabled: true
+      Line Style:
+        Line Width: 0.03
+        Value: Lines
+      Name: Grid
+      Plane Cell Count: 100
+      Reference Frame: world
+      Value: true
+
+    - Class: rviz/Path
+      Color: 0; 255; 0
+      Enabled: true
+      Name: WAM-V 2 Path
+      Topic: /wamv2/trajectory_path
+      Line Width: 0.03
+      Value: true
+
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /wamv2/visualization_markers
+      Name: WAM-V 2 Markers
+      Value: true
+
+  Global Options:
+    Fixed Frame: world
+    Frame Rate: 30
+
+  Views:
+    Current:
+      Class: rviz/TopDownOrtho
+      Scale: 10
+      Target Frame: wamv2/base_link
+      X: 20
+      Y: 20

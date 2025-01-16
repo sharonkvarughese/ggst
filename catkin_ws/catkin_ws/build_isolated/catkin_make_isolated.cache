@@ -1,0 +1,2 @@
+asv_wave_sim/asv_wave_sim:asv_wave_sim/asv_wave_sim_gazebo:asv_wave_sim/asv_wave_sim_gazebo_plugins:pid:robot_pose_ekf:sailboat_sim
+-G Unix Makefiles -DCATKIN_DEVEL_PREFIX=/home/sharon/catkin_ws/devel_isolated -DCMAKE_INSTALL_PREFIX=/home/sharon/catkin_ws/install_isolated

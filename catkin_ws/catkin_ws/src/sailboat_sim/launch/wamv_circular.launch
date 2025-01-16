@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Launch the ocean world -->
+  <include file="$(find asv_wave_sim_gazebo)/launch/ocean_world.launch"/>
+  
+  <!-- Transform broadcaster -->
+  <node pkg="sailboat_sim" type="transform_broadcaster.py" name="world_broadcaster" output="screen"/>
+  
+  <!-- Spawn the WAM-V -->
+  <node name="spawn_wamv" pkg="gazebo_ros" type="spawn_model"
+        args="-sdf 
+              -file $(find sailboat_sim)/models/wam-v/model.sdf
+              -model wamv
+              -x 0 -y 0 -z -0.01
+              -R 0 -P 0 -Y 0"
+        output="screen"
+        launch-prefix="bash -c 'sleep 5; $0 $@' "/>
+ 
+  <!-- Launch the circular trajectory controller -->
+  <node name="circular_trajectory_controller" 
+        pkg="sailboat_sim" 
+        type="circular_trajectory.py" 
+        output="screen"
+        launch-prefix="bash -c 'sleep 8; $0 $@' ">
+    <param name="radius" value="40.0"/>         <!-- Larger radius -->
+    <param name="angular_speed" value="1.0"/>   <!-- Faster rotation -->
+    <param name="linear_speed" value="20.0"/>
+    <param name="center_x" value="0.0"/>
+    <param name="center_y" value="0.0"/>
+    <param name="model_name" value="wamv"/>
+  </node>  
+   
+  <!-- Launch RViz with a unique name -->
+  <node name="sailboat_rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find sailboat_sim)/rviz/boat.rviz" />
+  
+</launch>

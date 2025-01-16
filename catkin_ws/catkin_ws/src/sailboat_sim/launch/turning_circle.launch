@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="scenario" default="three_times"/>
+    <arg name="turn_direction" default="port"/>
+    
+    <!-- Launch base simulation -->
+    <include file="$(find sailboat_sim)/launch/turning_circle_base.launch">
+        <arg name="scenario" value="$(arg scenario)"/>
+        <arg name="turn_direction" value="$(arg turn_direction)"/>
+    </include>
+
+    <!-- In turning_circle.launch -->
+    <!-- Robot Pose EKF with modified parameters -->
+    <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf">
+    <param name="output_frame" value="odom"/>
+    <param name="base_footprint_frame" value="base_link"/>
+    <param name="freq" value="30.0"/>
+    <param name="sensor_timeout" value="1.0"/>
+    <param name="odom_used" value="true"/>
+    <param name="imu_used" value="true"/>
+    <param name="vo_used" value="false"/>
+    <param name="debug" value="false"/>
+    <remap from="odom" to="wamv/odom"/>
+    <remap from="imu_data" to="wamv/imu"/>
+    </node>
+
+    <!-- Add static transform publisher -->
+    <node pkg="tf" type="static_transform_publisher" name="base_link_to_imu" 
+          args="0 0 0 0 0 0 base_link imu_link 100"/>
+
+</launch>

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- Static transforms -->
+    <node pkg="sailboat_sim" type="transform_broadcaster.py" 
+          name="world_frame_broadcaster" output="screen" />
+          
+    <!-- Let Gazebo handle base_link transforms -->
+    <param name="/gazebo/publish_odom_tf" value="true" />
+</launch>

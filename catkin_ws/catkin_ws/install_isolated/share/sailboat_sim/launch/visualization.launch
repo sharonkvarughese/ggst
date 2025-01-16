@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Transform broadcaster -->
+  <node pkg="sailboat_sim" type="transform_broadcaster.py" name="wamv_frame_broadcaster" output="screen"/>
+  
+  <!-- RViz for WAM-V 1 -->
+  <node name="rviz_wamv1" pkg="rviz" type="rviz" 
+        args="-d $(find sailboat_sim)/rviz/wamv1.rviz" 
+        output="screen">
+    <remap from="trajectory_path" to="wamv1/trajectory_path"/>
+    <remap from="visualization_markers" to="wamv1/visualization_markers"/>
+  </node>
+  
+  <!-- RViz for WAM-V 2 -->
+  <node name="rviz_wamv2" pkg="rviz" type="rviz" 
+        args="-d $(find sailboat_sim)/rviz/wamv2.rviz" 
+        output="screen">
+    <remap from="trajectory_path" to="wamv2/trajectory_path"/>
+    <remap from="visualization_markers" to="wamv2/visualization_markers"/>
+  </node>
+</launch>

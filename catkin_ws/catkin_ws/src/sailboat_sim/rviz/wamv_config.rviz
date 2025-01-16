@@ -1,0 +1,61 @@
+- Alpha: 1
+  Class: rviz/RobotModel
+  Collision Enabled: false
+  Enabled: true
+  Links:
+    All Links Enabled: true
+    Expand Joint Details: false
+    Expand Link Details: false
+    Expand Tree: false
+    Link Tree Style: Links in Alphabetic Order
+    base_link:
+      Alpha: 1
+      Show Axes: false
+      Show Trail: false
+    top_camera_link:
+      Alpha: 1
+      Show Axes: false
+      Show Trail: false
+  Name: RobotModel
+  Robot Description: robot_description
+  TF Prefix: ""
+  Update Interval: 0
+  Value: true
+  Visual Enabled: true
+
+- Class: rviz/TF
+  Enabled: true
+  Frame Timeout: 15
+  Frames:
+    All Enabled: true
+  Marker Scale: 1
+  Name: TF
+  Show Arrows: true
+  Show Axes: true
+  Show Names: true
+  Tree:
+    {}
+  Update Interval: 0
+  Value: true
+
+- Class: rviz/Image
+  Enabled: true
+  Image Topic: /wamv/top_camera/image_raw
+  Max Value: 1
+  Median window: 5
+  Min Value: 0
+  Name: Image
+  Normalize Range: true
+  Queue Size: 2
+  Transport Hint: raw
+  Unreliable: false
+  Value: true
+
+- Class: rviz/Marker
+  Enabled: true
+  Marker Topic: /trajectory
+  Name: Trajectory
+  Namespaces:
+    {}
+  Queue Size: 100
+  Value: true

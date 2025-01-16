@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<root>
+    <tabbed_widget name="Main Window" parent="main_window">
+        <Tab containers="1" tab_name="Trajectory">
+            <Container>
+                <DockSplitter orientation="-" sizes="1" count="1">
+                    <DockArea name="...">
+                        <plot style="Lines">
+                            <range left="-20" bottom="-20" top="20" right="20"/>
+                            <limitY/>
+                            <curve name="/wamv/actual_path" color="#FF0000"/>
+                            <curve name="/wamv/reference_path" color="#00FF00"/>
+                        </plot>
+                    </DockArea>
+                </DockSplitter>
+            </Container>
+        </Tab>
+        <Tab containers="1" tab_name="Measurements">
+            <Container>
+                <DockSplitter orientation="-" sizes="1" count="1">
+                    <DockArea name="...">
+                        <plot style="Lines">
+                            <range left="0" bottom="0" top="10" right="100"/>
+                            <limitY/>
+                            <curve name="/speed/state" color="#1AC6FF"/>
+                            <curve name="/turn/state" color="#FF7F0E"/>
+                        </plot>
+                    </DockArea>
+                </DockSplitter>
+            </Container>
+        </Tab>
+    </tabbed_widget>
+</root>

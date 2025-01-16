@@ -1,0 +1,8 @@
+prefix=/home/sharon/catkin_ws/install_isolated
+
+Name: sailboat_sim
+Description: Description of sailboat_sim
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
